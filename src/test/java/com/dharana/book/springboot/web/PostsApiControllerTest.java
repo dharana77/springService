@@ -1,5 +1,6 @@
 package com.dharana.book.springboot.web;
 
+import com.dharana.book.springboot.domain.posts.Posts;
 import com.dharana.book.springboot.domain.posts.PostsRepository;
 import com.dharana.book.springboot.web.dto.PostsSaveRequestDto;
 import org.junit.After;
@@ -48,5 +49,12 @@ public class PostsApiControllerTest {
         String url = "http://localhost:" + port + "/api/v1/posts";
 
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Posts> all = postsRepository.findAll();
+        assertThat(all.get(0).getTitle()).isEqualTo(title);
+        assertThat(all.get(0).getContent()).isEqualTo(content);
     }
 }
